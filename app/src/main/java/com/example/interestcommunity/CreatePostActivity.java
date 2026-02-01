@@ -1,25 +1,27 @@
 package com.example.interestcommunity;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.example.interestcommunity.models.Post;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
 
 public class CreatePostActivity extends AppCompatActivity {
 
     private EditText titleEdit, contentEdit;
+    private Spinner categorySpinner;
     private Button postButton;
     private FirebaseAuth auth;
-    private DatabaseReference usersRef;
+    private DatabaseReference postsRef;
+
+    // URL твоей базы — теперь всё будет работать!
+    private static final String DATABASE_URL = "https://interestcommunity-f6a3f-default-rtdb.europe-west1.firebasedatabase.app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +30,20 @@ public class CreatePostActivity extends AppCompatActivity {
 
         titleEdit = findViewById(R.id.title);
         contentEdit = findViewById(R.id.content);
+        categorySpinner = findViewById(R.id.spinner_category);
         postButton = findViewById(R.id.postButton);
-
         auth = FirebaseAuth.getInstance();
-        usersRef = FirebaseDatabase.getInstance().getReference("users");
+
+        // Инициализация базы с полным URL
+        FirebaseDatabase database = FirebaseDatabase.getInstance(DATABASE_URL);
+        postsRef = database.getReference("posts");
+
+        // Настройка Spinner для тем
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.post_categories, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+        categorySpinner.setSelection(0);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -46,49 +58,42 @@ public class CreatePostActivity extends AppCompatActivity {
         String content = contentEdit.getText().toString().trim();
 
         if (title.isEmpty() || content.isEmpty()) {
-            Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (auth.getCurrentUser() == null) {
-            Toast.makeText(this, "Вы не авторизованы!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Вы не авторизованы!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         String userId = auth.getCurrentUser().getUid();
+        String authorName = auth.getCurrentUser().getDisplayName();
+        if (authorName == null || authorName.isEmpty()) {
+            authorName = auth.getCurrentUser().getEmail().split("@")[0];
+        }
 
-        // Получаем имя пользователя из Firebase Auth (email или displayName)
-        String userEmail = auth.getCurrentUser().getEmail();
-        String displayName = auth.getCurrentUser().getDisplayName();
-        String authorName = displayName != null && !displayName.isEmpty()
-                ? displayName
-                : (userEmail != null ? userEmail.split("@")[0] : "Аноним");
+        String category = categorySpinner.getSelectedItem().toString();
 
-        // Создаем пост
         Post post = new Post(title, content, userId);
         post.setAuthorName(authorName);
-        post.setTimestamp(System.currentTimeMillis());
+        post.setCategory(category);
 
-        // Получаем ссылку на базу данных
-        DatabaseReference postsRef = DatabaseHelper.getDatabaseReference().child("posts");
         String postId = postsRef.push().getKey();
-        post.setId(postId);
-
         if (postId == null) {
-            Toast.makeText(this, "Ошибка создания поста", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Ошибка генерации ID", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Сохраняем пост в Firebase
+        post.setId(postId);
+
         postsRef.child(postId).setValue(post)
-                .addOnSuccessListener(aVoid -> {
+                .addOnSuccessListener(unused -> {
                     Toast.makeText(this, "Пост опубликован!", Toast.LENGTH_SHORT).show();
-                    Log.d("CreatePost", "Пост создан: " + postId + " автором: " + authorName);
                     finish();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    Log.e("CreatePost", "Ошибка создания поста", e);
                 });
     }
 

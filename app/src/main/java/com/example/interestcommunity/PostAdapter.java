@@ -25,8 +25,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_post, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
         return new PostViewHolder(view);
     }
 
@@ -34,21 +33,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         Post post = postList.get(position);
 
-        // Устанавливаем данные поста
-        holder.authorName.setText(post.getAuthorName() != null
-                ? post.getAuthorName()
-                : "Анонимный пользователь");
+        holder.authorName.setText(post.getAuthorName() != null ? post.getAuthorName() : "Аноним");
 
-        holder.postTitle.setText(post.getTitle());
-        holder.postContent.setText(post.getContent());
-
-        // Устанавливаем время публикации
         if (post.getTimestamp() > 0) {
-            String time = dateFormat.format(new Date(post.getTimestamp()));
-            holder.postTime.setText(time);
+            holder.postTime.setText(dateFormat.format(new Date(post.getTimestamp())));
         } else {
             holder.postTime.setText("только что");
         }
+
+        if (post.getCategory() != null && !post.getCategory().isEmpty()) {
+            holder.postCategory.setText("Тема: " + post.getCategory());
+            holder.postCategory.setVisibility(View.VISIBLE);
+        } else {
+            holder.postCategory.setVisibility(View.GONE);
+        }
+
+        holder.postTitle.setText(post.getTitle());
+        holder.postContent.setText(post.getContent());
     }
 
     @Override
@@ -57,20 +58,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     public static class PostViewHolder extends RecyclerView.ViewHolder {
-        TextView authorName, postTime, postTitle, postContent;
+        TextView authorName, postTime, postCategory, postTitle, postContent;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
             authorName = itemView.findViewById(R.id.authorName);
             postTime = itemView.findViewById(R.id.postTime);
+            postCategory = itemView.findViewById(R.id.postCategory);
             postTitle = itemView.findViewById(R.id.postTitle);
             postContent = itemView.findViewById(R.id.postContent);
         }
-    }
-
-    public void updatePosts(List<Post> newPosts) {
-        postList.clear();
-        postList.addAll(newPosts);
-        notifyDataSetChanged();
     }
 }

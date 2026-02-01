@@ -1,3 +1,11 @@
 <resources>
+    <!-- ... твои текущие строки ... -->
     <string name="app_name">InterestCommunity</string>
+    <string-array name="post_categories">
+        <item>Музыка</item>
+        <item>Кино</item>
+        <item>Спорт</item>
+        <item>Игры</item>
+        <item>Книги</item>
+    </string-array>
 </resources>
