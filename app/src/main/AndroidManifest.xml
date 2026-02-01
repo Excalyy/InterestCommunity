@@ -11,7 +11,6 @@
         android:theme="@style/Theme.InterestCommunity"
         tools:targetApi="31">
 
-        <!-- Главное Activity -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -21,25 +20,21 @@
             </intent-filter>
         </activity>
 
-        <!-- Login Activity -->
         <activity
             android:name=".LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.InterestCommunity.NoActionBar" />
 
-        <!-- Register Activity -->
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.InterestCommunity.NoActionBar" />
 
-        <!-- Create Post Activity -->
         <activity
             android:name=".CreatePostActivity"
             android:exported="false"
             android:theme="@style/Theme.InterestCommunity" />
 
-        <!-- Profile Activity -->
         <activity
             android:name=".ProfileActivity"
             android:exported="false"

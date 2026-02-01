@@ -3,62 +3,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp">
-
-    <!-- Отступ сверху -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp" />
+    android:padding="16dp"
+    android:background="#FAFAFA">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Профиль"
-        android:textSize="28sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="#2196F3"
-        android:layout_marginBottom="40dp"/>
-
-    <!-- Имя пользователя -->
-    <TextView
-        android:id="@+id/usernameText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Имя пользователя: загружается..."
-        android:textSize="18sp"
-        android:padding="16dp"
-        android:background="@drawable/rounded_background"
         android:layout_marginBottom="24dp"/>
 
-    <!-- Email (оставляем как дополнительную информацию) -->
     <TextView
-        android:id="@+id/emailText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email: загружается..."
+        android:text="Имя пользователя:"
         android:textSize="16sp"
-        android:padding="16dp"
-        android:background="@drawable/rounded_background"
-        android:layout_marginBottom="40dp"/>
+        android:layout_marginBottom="8dp"/>
 
-    <!-- Количество постов -->
-    <TextView
-        android:id="@+id/postsCount"
+    <EditText
+        android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Количество постов: 0"
-        android:textSize="18sp"
-        android:padding="16dp"
-        android:background="@drawable/rounded_background"
-        android:layout_marginBottom="40dp"/>
+        android:hint="Введите новое имя"
+        android:inputType="textPersonName"
+        android:background="@android:drawable/edit_text"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
 
-    <!-- Кнопка выхода -->
     <Button
-        android:id="@+id/logoutButton"
+        android:id="@+id/btnSaveProfile"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:text="Выйти из аккаунта"
-        android:textSize="17sp"
-        android:backgroundTint="#F44336"
-        android:textColor="#FFFFFF"/>
+        android:text="Сохранить изменения"
+        android:textSize="16sp"
+        android:backgroundTint="#4CAF50"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:id="@+id/userEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email: "
+        android:textSize="16sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Количество постов"
+        android:textSize="16sp"
+        android:textColor="#757575"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvPostCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="загружается..."
+        android:textSize="18sp"
+        android:padding="12dp"
+        android:background="@drawable/rounded_background"
+        android:layout_marginBottom="16dp"/>
 </LinearLayout>
